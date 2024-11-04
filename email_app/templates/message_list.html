@@ -1,0 +1,86 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Список сообщений</title>
+    <style>
+        .progress {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .progress-bar {
+            height: 20px;
+            width: 0;
+            background-color: #4caf50;
+            text-align: center;
+            color: white;
+            transition: width 1s;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<form method="post">
+    {% csrf_token %}
+    <input type="email" name="email" placeholder="Введите Email" required>
+    <input type="password" name="password" placeholder="Введите пароль" required>
+    <button type="submit">Войти</button>
+</form>
+
+<div class="progress">
+    <div class="progress-bar" id="progress-bar">0%</div>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Тема</th>
+        <th>Дата отправки</th>
+        <th>Дата получения</th>
+        <th>Описание</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for message in messages %}
+    <tr>
+        <td>{{ message.subject }}</td>
+        <td>{{ message.date_sent }}</td>
+        <td>{{ message.date_received }}</td>
+        <td>{{ message.body }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4">Нет сообщений для отображения.</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function updateProgressBar() {
+        const progressBar = document.getElementById('progress-bar');
+        let width = 0;
+        const totalMessages = 10;
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+            } else {
+                width++;
+                progressBar.style.width = width + '%';
+                progressBar.innerText = width + '%';
+            }
+        }, 100);
+    }
+
+    window.onload = updateProgressBar;
+</script>
+</body>
+</html>
